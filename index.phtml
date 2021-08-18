@@ -1,0 +1,75 @@
+<?php
+require "header.phtml";
+require "BridgeConnection.php";
+require "Weather.php";
+
+
+if (isset($_POST['connect']))
+{
+
+    $bridge= new BridgeConnection();
+    $bridge->connect();
+}
+
+if (isset($_POST['on']))
+{
+
+    $bridge= new BridgeConnection();
+    $bridge->lightsOn();
+}
+
+if (isset($_POST['off']))
+{
+
+    $bridge= new BridgeConnection();
+    $bridge->lightsOff();
+}
+
+
+if (isset($_POST['colour']))
+{
+    $weather = new Currentweather();
+    $bridge = new BridgeConnection();
+    $temperature = $weather->temperature($weather->locationbycity('Manchester', 'UK'));
+    $bridge->tempColourChange(0);
+}
+
+
+?>
+
+
+
+<div class="page-header header-filter" data-parallax="true" style="background-image: url('material-kit-master/assets/img/bg.jpg')">
+</div>
+
+<div class="main main-raised">
+    <div class="container">
+        <div class="section text-center">
+            <form method="post">
+                    <input type="submit" name="connect" class="btn btn-success btn-round" value="Connect" style="width: 250px"/>
+                <br>
+                <br>
+                    <input type="submit" name="off" class="btn btn-dark btn-round" value="Turn lights off" style="width: 250px"/>
+                <br>
+                <br>
+                    <input type="submit" name="on" class="btn btn-warning btn-round" value="Turn lights on" style="width: 250px"/>
+                <br>
+                <br>
+                    <input type="submit" name="weather" class="btn btn-danger btn-round" value="Current Outside Temperature" style="width: 250px">
+                <br>
+                <?php if (isset($_POST['weather']))
+                {
+                    $weather = new Currentweather();
+                    $temp = $weather->temperature($weather->locationbycity('Manchester','UK'));
+                    echo "Current Temeperature is ".$temp."&#8451";
+                }?>
+                <br>
+                    <input type="submit" name="colour" class="btn btn-rose btn-round" value="Change Colour" style="width: 250px"/>
+            </form>
+        </div>
+    </div>
+</div>
+
+<?php
+require "footer.phtml";
+?>
